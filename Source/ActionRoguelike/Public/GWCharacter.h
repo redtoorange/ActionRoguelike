@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GWMagicProjectile.h"
 #include "GameFramework/Character.h"
 #include "GWCharacter.generated.h"
 
@@ -21,6 +22,18 @@ protected:
 
 	UPROPERTY(VisibleAnywhere)
 	USpringArmComponent* SpringArmComponent;
+
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<AGWMagicProjectile> PrimaryAttackClass;
+
+	UPROPERTY(VisibleAnywhere)
+	class UGWInteractionComponent* InteractionComponent;
+
+	UPROPERTY(EditAnywhere)
+	class UAnimMontage* AttackAnim;
+
+	UPROPERTY(EditAnywhere)
+	float projectileDelay = 0.2f;
 	
 	virtual void BeginPlay() override;
 
@@ -33,4 +46,14 @@ private:
 	void HandleMoveForward(float axisValue);
 	
 	void HandleMoveRight(float axisValue);
+
+	void PrimaryAttack();
+	
+	void PrimaryAttack_TimerElapsed();
+
+	void PrimaryInteract();
+	
+	void HandleJump();
+
+	FTimerHandle TimerHandle;
 };
