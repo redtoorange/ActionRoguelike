@@ -1,12 +1,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GWMagicProjectile.h"
 #include "GameFramework/Character.h"
 #include "GWCharacter.generated.h"
 
 class UCameraComponent;
 class USpringArmComponent;
+class AGWBaseProjectile;
 
 UCLASS()
 class ACTIONROGUELIKE_API AGWCharacter : public ACharacter
@@ -23,9 +23,15 @@ protected:
 	UPROPERTY(VisibleAnywhere)
 	USpringArmComponent* SpringArmComponent;
 
-	UPROPERTY(EditAnywhere)
-	TSubclassOf<AGWMagicProjectile> PrimaryAttackClass;
+	UPROPERTY(EditAnywhere, Category="Attacks")
+	TSubclassOf<AGWBaseProjectile> PrimaryAttackClass;
 
+	UPROPERTY(EditAnywhere, Category="Attacks")
+	TSubclassOf<AGWBaseProjectile> BlackHoleAttackClass;
+
+	UPROPERTY(EditAnywhere, Category="Attacks")
+	TSubclassOf<AGWBaseProjectile> TeleportAttackClass;
+	
 	UPROPERTY(VisibleAnywhere)
 	class UGWInteractionComponent* InteractionComponent;
 
@@ -34,7 +40,16 @@ protected:
 
 	UPROPERTY(EditAnywhere)
 	float projectileDelay = 0.2f;
-	
+
+	UPROPERTY(EditAnywhere)
+	float blackHoleDelay = 0.2f;
+
+	UPROPERTY(EditAnywhere)
+	float teleportDelay = 0.2f;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	class UGWAttributeComponent* AttributeComponent;
+		
 	virtual void BeginPlay() override;
 
 public:	
@@ -48,12 +63,21 @@ private:
 	void HandleMoveRight(float axisValue);
 
 	void PrimaryAttack();
-	
 	void PrimaryAttack_TimerElapsed();
+
+	void BlackHoleAttack();
+	void BlackHoleAttack_TimerElapsed();
+
+	void TeleportAttack();
+	void TeleportAttack_TimerElapsed();
 
 	void PrimaryInteract();
 	
 	void HandleJump();
 
-	FTimerHandle TimerHandle;
+	FTimerHandle AttackTimer;
+
+	FVector GetTargetEndPoint();
+
+	void SpawnAttack(TSubclassOf<AGWBaseProjectile> attack);
 };

@@ -31,7 +31,9 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void Explode();
-	
+
+	virtual void PostInitializeComponents() override;
+
 private:
 	UFUNCTION(BlueprintCallable)
 	void HandleOnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);

@@ -1,0 +1,2 @@
+D:\Workspace\Unreal Projects\ActionRoguelike\Plugins\Developer\RiderLink\Intermediate\Build\Win64\UnrealEditor\Development\RD\Definitions.h
+D:\Workspace\Unreal Projects\ActionRoguelike\Plugins\Developer\RiderLink\Source\RD\src\rd_gen_cpp\src\RdTextBuffer.h
