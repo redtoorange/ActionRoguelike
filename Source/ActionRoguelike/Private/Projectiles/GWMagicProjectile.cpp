@@ -1,5 +1,6 @@
 #include "Projectiles/GWMagicProjectile.h"
 
+#include "DrawDebugHelpers.h"
 #include "Components/GWAttributeComponent.h"
 #include "Components/SphereComponent.h"
 
@@ -25,11 +26,12 @@ void AGWMagicProjectile::OnActorOverlap(UPrimitiveComponent* PrimitiveComponent,
                                         UPrimitiveComponent* PrimitiveComponent1, int I, bool bArg,
                                         const FHitResult& HitResult)
 {
-	if (Actor)
+	if (Actor && Actor != GetInstigator())
 	{
 		UGWAttributeComponent* AttributeComponent = Actor->FindComponentByClass<UGWAttributeComponent>();
 		if (AttributeComponent)
 		{
+			DrawDebugString(GetWorld(), HitResult.ImpactPoint, "-20", nullptr, FColor::White, 3.0f, true);
 			AttributeComponent->ApplyHealthChange(-20.0f, this);
 			Destroy();
 		}
