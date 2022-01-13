@@ -22,9 +22,6 @@ protected:
 
 	UPROPERTY(EditAnywhere)
 	float teleportTime = 0.4f;
-
-	UPROPERTY(EditAnywhere)
-	UParticleSystem* TeleportEffect;
 	
 	UFUNCTION()
 	void EffectTimerElapsed();
@@ -32,9 +29,11 @@ protected:
 	UFUNCTION()
 	void TeleportTimerElapsed();
 
-	UFUNCTION()
-	void OnComponentHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
-	
+	virtual void OnActorHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
+		FVector NormalImpulse, const FHitResult& Hit) override;
+
+public:
+	virtual void Explode_Implementation() override;
 private:
 	FTimerHandle EffectTimer;
 	FTimerHandle TeleportTimer;

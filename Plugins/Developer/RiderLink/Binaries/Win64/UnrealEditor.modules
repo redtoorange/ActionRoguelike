@@ -2,11 +2,11 @@
 	"BuildId": "16433597",
 	"Modules": 
 	{
-		"RD": "UnrealEditor-RD-0012.dll",
-		"RiderBlueprintExtension": "UnrealEditor-RiderBlueprintExtension-0012.dll",
-		"RiderGameControlExtension": "UnrealEditor-RiderGameControlExtension-0012.dll",
-		"RiderLink": "UnrealEditor-RiderLink-0012.dll",
-		"RiderLoggingExtension": "UnrealEditor-RiderLoggingExtension-0012.dll",
-		"RiderShaderInfoDump": "UnrealEditor-RiderShaderInfoDump-0012.dll"
+		"RD": "UnrealEditor-RD-0019.dll",
+		"RiderBlueprintExtension": "UnrealEditor-RiderBlueprintExtension-0019.dll",
+		"RiderGameControlExtension": "UnrealEditor-RiderGameControlExtension-0019.dll",
+		"RiderLink": "UnrealEditor-RiderLink-0019.dll",
+		"RiderLoggingExtension": "UnrealEditor-RiderLoggingExtension-0019.dll",
+		"RiderShaderInfoDump": "UnrealEditor-RiderShaderInfoDump-0019.dll"
 	}
 }

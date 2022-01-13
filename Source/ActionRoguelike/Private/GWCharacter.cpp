@@ -100,12 +100,21 @@ FVector AGWCharacter::GetTargetEndPoint()
 	FRotator viewRotation;
 	GetController()->GetPlayerViewPoint(viewPosition, viewRotation);
 
-	const FVector endPoint = viewPosition + viewRotation.Vector() * 20000;
+	const FVector endPoint = viewPosition + viewRotation.Vector() * 10000;
 	FHitResult HitResult;
-	FCollisionObjectQueryParams Params;
-	Params.AddObjectTypesToQuery(ECC_WorldDynamic);
-	Params.AddObjectTypesToQuery(ECC_WorldStatic);
-	if (GetWorld()->LineTraceSingleByObjectType(HitResult, viewPosition, endPoint, Params))
+
+	FCollisionShape shape;
+	shape.SetSphere(20.0f);
+	
+	FCollisionQueryParams Params;
+	Params.AddIgnoredActor(this);
+	
+	FCollisionObjectQueryParams ObjectQueryParams;
+	ObjectQueryParams.AddObjectTypesToQuery(ECC_WorldDynamic);
+	ObjectQueryParams.AddObjectTypesToQuery(ECC_WorldStatic);
+	ObjectQueryParams.AddObjectTypesToQuery(ECC_Pawn);
+	
+	if (GetWorld()->SweepSingleByObjectType(HitResult, viewPosition, endPoint, FQuat::Identity, ObjectQueryParams, shape, Params))
 	{
 		return HitResult.ImpactPoint;
 	}
@@ -134,13 +143,13 @@ void AGWCharacter::BlackHoleAttack_TimerElapsed()
 
 void AGWCharacter::SpawnAttack(TSubclassOf<AGWBaseProjectile> attack)
 {
-	if (ensure(attack))
+	if (ensureAlways(attack))
 	{
-		FVector muzzleLocation = GetMesh()->GetSocketLocation("Muzzle_01");
-		FVector direction = GetTargetEndPoint() - muzzleLocation;
+		FVector HandLocation = GetMesh()->GetSocketLocation("Muzzle_01");
+		FVector direction = GetTargetEndPoint() - HandLocation;
 		FRotator lookRotation = FRotationMatrix::MakeFromX(direction).Rotator();
 
-		FTransform SpawnTM = FTransform(lookRotation, muzzleLocation);
+		FTransform SpawnTM = FTransform(lookRotation, HandLocation);
 
 		FActorSpawnParameters SpawnParameters;
 		SpawnParameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;

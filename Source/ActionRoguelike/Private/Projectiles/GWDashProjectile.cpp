@@ -9,6 +9,8 @@
 AGWDashProjectile::AGWDashProjectile()
 {
 	PrimaryActorTick.bCanEverTick = true;
+
+	MovementComponent->InitialSpeed = 6000.0f;
 }
 
 void AGWDashProjectile::BeginPlay()
@@ -16,7 +18,7 @@ void AGWDashProjectile::BeginPlay()
 	Super::BeginPlay();
 
 	SphereComponent->IgnoreActorWhenMoving(GetInstigator(), true);
-	SphereComponent->OnComponentHit.AddDynamic(this, &AGWDashProjectile::OnComponentHit);
+	SphereComponent->OnComponentHit.AddDynamic(this, &AGWDashProjectile::OnActorHit);
 	GetWorldTimerManager().SetTimer(EffectTimer, this, &AGWDashProjectile::EffectTimerElapsed, effectTime, false);
 }
 
@@ -28,26 +30,35 @@ void AGWDashProjectile::Tick(float DeltaTime)
 // The timer has run out, so stop the projectile and teleport the player
 void AGWDashProjectile::EffectTimerElapsed()
 {
-	MovementComponent->StopMovementImmediately();
-	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), TeleportEffect, GetActorTransform());
-	GetWorldTimerManager().SetTimer(TeleportTimer, this, &AGWDashProjectile::TeleportTimerElapsed, teleportTime, false);
+	Explode();
 }
 
 void AGWDashProjectile::TeleportTimerElapsed()
 {
-	GetInstigator()->TeleportTo(GetActorLocation(), GetInstigator()->GetActorRotation());
+	AActor* actorToTeleport = GetInstigator();
+	if (actorToTeleport)
+	{
+		actorToTeleport->TeleportTo(GetActorLocation(), actorToTeleport->GetActorRotation(), false, false);
+	}
 	Destroy();
 }
 
 // If we hit the world, then we want to stop immediately and start the effect
-void AGWDashProjectile::OnComponentHit(UPrimitiveComponent* HitComponent, AActor* OtherActor,
-                                       UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
+void AGWDashProjectile::OnActorHit(UPrimitiveComponent* HitComponent, AActor* OtherActor,
+                                   UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
-	if(Hit.GetActor() != GetInstigator())
+	if (Hit.GetActor() != GetInstigator())
 	{
-		GetWorldTimerManager().ClearTimer(EffectTimer);
-		MovementComponent->StopMovementImmediately();
-		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), TeleportEffect, GetActorTransform());
-		GetWorldTimerManager().SetTimer(TeleportTimer, this, &AGWDashProjectile::TeleportTimerElapsed, teleportTime, false);
+		Explode();
 	}
+}
+
+void AGWDashProjectile::Explode_Implementation()
+{
+	GetWorldTimerManager().ClearTimer(EffectTimer);
+	UGameplayStatics::SpawnEmitterAtLocation(this, ImpactVFX, GetActorLocation(), GetActorRotation());
+	EffectComponent->DeactivateSystem();
+	MovementComponent->StopMovementImmediately();
+	SetActorEnableCollision(false);
+	GetWorldTimerManager().SetTimer(TeleportTimer, this, &AGWDashProjectile::TeleportTimerElapsed, teleportTime, false);
 }
