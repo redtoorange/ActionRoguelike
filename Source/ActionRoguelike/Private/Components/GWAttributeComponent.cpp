@@ -14,3 +14,8 @@ bool UGWAttributeComponent::ApplyHealthChange(float delta, AActor* Instigator)
 
 	return success;
 }
+
+bool UGWAttributeComponent::IsAlive() const
+{
+	return health > 0;
+}

@@ -22,9 +22,12 @@ public:
 	UPROPERTY(BlueprintAssignable)
 	FOnHealthChange OnHealthChange;
 
+	UFUNCTION(BlueprintCallable)
+	bool IsAlive() const;
+
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Attributes")
 	float health;
-
+	
 	// HealthMax, Stamina, Strength
 };

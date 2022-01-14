@@ -52,10 +52,16 @@ protected:
 		
 	virtual void BeginPlay() override;
 
+protected:
+	UFUNCTION()
+	void OnHealthChanged(AActor* HealthChangeInstigator, UGWAttributeComponent* OwningComponent, float NewHealth, float Delta);
+
 public:	
 	virtual void Tick(float DeltaTime) override;
 
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	
+	virtual void PostInitializeComponents() override;
 
 private:
 	void HandleMoveForward(float axisValue);

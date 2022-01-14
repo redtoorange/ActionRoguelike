@@ -56,6 +56,12 @@ void AGWCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 	PlayerInputComponent->BindAction("PrimaryInteract", IE_Pressed, this, &AGWCharacter::PrimaryInteract);
 }
 
+void AGWCharacter::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
+	AttributeComponent->OnHealthChange.AddDynamic(this, &AGWCharacter::OnHealthChanged);
+}
+
 void AGWCharacter::HandleMoveForward(float axisValue)
 {
 	FRotator controlRot = GetControlRotation();
@@ -172,4 +178,14 @@ void AGWCharacter::TeleportAttack()
 void AGWCharacter::TeleportAttack_TimerElapsed()
 {
 	SpawnAttack(TeleportAttackClass);
+}
+
+void AGWCharacter::OnHealthChanged(AActor* HealthChangeInstigator, UGWAttributeComponent* OwningComponent,
+	float NewHealth, float Delta)
+{
+	if(NewHealth <= 0 && Delta < 0)
+	{
+		APlayerController* PlayerController = Cast<APlayerController>(GetController());
+		DisableInput(PlayerController);
+	}
 }
