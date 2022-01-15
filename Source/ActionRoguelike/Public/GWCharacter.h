@@ -52,10 +52,11 @@ protected:
 		
 	virtual void BeginPlay() override;
 
-protected:
 	UFUNCTION()
 	void OnHealthChanged(AActor* HealthChangeInstigator, UGWAttributeComponent* OwningComponent, float NewHealth, float Delta);
 
+	UPROPERTY(EditAnywhere, Category="VFX")
+	UParticleSystem* CastingVFX;
 public:	
 	virtual void Tick(float DeltaTime) override;
 

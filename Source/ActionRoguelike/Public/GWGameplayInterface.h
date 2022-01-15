@@ -13,9 +13,6 @@ class UGWGameplayInterface : public UInterface
 	GENERATED_BODY()
 };
 
-/**
- * 
- */
 class ACTIONROGUELIKE_API IGWGameplayInterface
 {
 	GENERATED_BODY()

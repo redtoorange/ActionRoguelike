@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Sound/SoundCue.h"
 #include "GWBaseProjectile.generated.h"
 
 UCLASS(Abstract)
@@ -27,9 +28,18 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components")
 	class UParticleSystemComponent* EffectComponent;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components")
+	UAudioComponent* AudioComponent;
+
 	UPROPERTY(EditDefaultsOnly, Category="Effects")
 	UParticleSystem* ImpactVFX;
+	
+	UPROPERTY(EditDefaultsOnly, Category="Effects")
+	USoundCue* ImpactSoundFx;
 
+	UPROPERTY(EditDefaultsOnly, Category="Effects")
+	TSubclassOf<UCameraShakeBase> CameraShake;
+	
 	UFUNCTION()
 	virtual void OnActorHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
 	                        FVector NormalImpulse, const FHitResult& Hit);

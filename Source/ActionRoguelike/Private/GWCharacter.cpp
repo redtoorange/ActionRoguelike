@@ -8,6 +8,7 @@
 #include "Projectiles/GWBaseProjectile.h"
 
 #include "GameFramework/SpringArmComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 AGWCharacter::AGWCharacter()
 {
@@ -90,6 +91,24 @@ void AGWCharacter::PrimaryAttack()
 	}
 }
 
+void AGWCharacter::BlackHoleAttack()
+{
+	if (!AttackTimer.IsValid())
+	{
+		PlayAnimMontage(AttackAnim);
+		GetWorldTimerManager().SetTimer(AttackTimer, this, &AGWCharacter::BlackHoleAttack_TimerElapsed, blackHoleDelay);
+	}
+}
+
+void AGWCharacter::TeleportAttack()
+{
+	if (!AttackTimer.IsValid())
+	{
+		PlayAnimMontage(AttackAnim);
+		GetWorldTimerManager().SetTimer(AttackTimer, this, &AGWCharacter::TeleportAttack_TimerElapsed, teleportDelay);
+	}
+}
+
 void AGWCharacter::HandleJump()
 {
 	Jump();
@@ -133,14 +152,7 @@ void AGWCharacter::PrimaryAttack_TimerElapsed()
 	SpawnAttack(PrimaryAttackClass);
 }
 
-void AGWCharacter::BlackHoleAttack()
-{
-	if (!AttackTimer.IsValid())
-	{
-		PlayAnimMontage(AttackAnim);
-		GetWorldTimerManager().SetTimer(AttackTimer, this, &AGWCharacter::BlackHoleAttack_TimerElapsed, blackHoleDelay);
-	}
-}
+
 
 void AGWCharacter::BlackHoleAttack_TimerElapsed()
 {
@@ -151,6 +163,8 @@ void AGWCharacter::SpawnAttack(TSubclassOf<AGWBaseProjectile> attack)
 {
 	if (ensureAlways(attack))
 	{
+		UGameplayStatics::SpawnEmitterAttached(CastingVFX, GetMesh(), "Muzzle_01");
+
 		FVector HandLocation = GetMesh()->GetSocketLocation("Muzzle_01");
 		FVector direction = GetTargetEndPoint() - HandLocation;
 		FRotator lookRotation = FRotationMatrix::MakeFromX(direction).Rotator();
@@ -166,14 +180,7 @@ void AGWCharacter::SpawnAttack(TSubclassOf<AGWBaseProjectile> attack)
 	}
 }
 
-void AGWCharacter::TeleportAttack()
-{
-	if (!AttackTimer.IsValid())
-	{
-		PlayAnimMontage(AttackAnim);
-		GetWorldTimerManager().SetTimer(AttackTimer, this, &AGWCharacter::TeleportAttack_TimerElapsed, teleportDelay);
-	}
-}
+
 
 void AGWCharacter::TeleportAttack_TimerElapsed()
 {
@@ -183,6 +190,11 @@ void AGWCharacter::TeleportAttack_TimerElapsed()
 void AGWCharacter::OnHealthChanged(AActor* HealthChangeInstigator, UGWAttributeComponent* OwningComponent,
 	float NewHealth, float Delta)
 {
+	if(Delta < 0)
+	{
+		GetMesh()->SetScalarParameterValueOnMaterials("TimeToHit", GetWorld()->TimeSeconds);
+	}
+	
 	if(NewHealth <= 0 && Delta < 0)
 	{
 		APlayerController* PlayerController = Cast<APlayerController>(GetController());

@@ -13,7 +13,11 @@ AGWMagicProjectile::AGWMagicProjectile()
 void AGWMagicProjectile::BeginPlay()
 {
 	Super::BeginPlay();
+}
 
+void AGWMagicProjectile::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
 	SphereComponent->OnComponentBeginOverlap.AddDynamic(this, &AGWMagicProjectile::OnActorOverlap);
 }
 
@@ -31,9 +35,8 @@ void AGWMagicProjectile::OnActorOverlap(UPrimitiveComponent* PrimitiveComponent,
 		UGWAttributeComponent* AttributeComponent = Actor->FindComponentByClass<UGWAttributeComponent>();
 		if (AttributeComponent)
 		{
-			DrawDebugString(GetWorld(), HitResult.ImpactPoint, "-20", nullptr, FColor::White, 3.0f, true);
 			AttributeComponent->ApplyHealthChange(-20.0f, this);
-			Destroy();
+			Explode();
 		}
 	}
 }

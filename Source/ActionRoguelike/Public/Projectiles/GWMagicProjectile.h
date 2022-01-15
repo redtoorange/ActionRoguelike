@@ -14,6 +14,8 @@ public:
 
 	virtual void Tick(float DeltaTime) override;
 
+	virtual void PostInitializeComponents() override;
+
 protected:
 	UFUNCTION()
 	void OnActorOverlap(UPrimitiveComponent* PrimitiveComponent, AActor* Actor, UPrimitiveComponent* PrimitiveComponent1, int I, bool bArg, const FHitResult& HitResult);

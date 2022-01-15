@@ -25,9 +25,18 @@ public:
 	UFUNCTION(BlueprintCallable)
 	bool IsAlive() const;
 
+	UFUNCTION(BlueprintCallable)
+	bool IsFullHealth() const;
+
+	virtual void BeginPlay() override;
+
+	UFUNCTION(BlueprintCallable)
+	float GetMaxHealth() const;
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Attributes")
-	float health;
-	
+	float Health;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Attributes")
+	float MaxHealth;
 	// HealthMax, Stamina, Strength
 };

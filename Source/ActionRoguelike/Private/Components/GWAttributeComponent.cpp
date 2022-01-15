@@ -2,20 +2,38 @@
 
 UGWAttributeComponent::UGWAttributeComponent()
 {
-	health = 100;
+	Health = 100;
+	MaxHealth = 100;
+}
+
+void UGWAttributeComponent::BeginPlay()
+{
+	Super::BeginPlay();
+
+	Health = MaxHealth;
 }
 
 bool UGWAttributeComponent::ApplyHealthChange(float delta, AActor* Instigator)
 {
 	bool success = true;
 
-	health = FMath::Clamp(health + delta, 0.0f, 100.0f);
-	OnHealthChange.Broadcast(Instigator, this, health, delta);
+	Health = FMath::Clamp(Health + delta, 0.0f, MaxHealth);
+	OnHealthChange.Broadcast(Instigator, this, Health, delta);
 
 	return success;
 }
 
 bool UGWAttributeComponent::IsAlive() const
 {
-	return health > 0;
+	return Health > 0;
+}
+
+bool UGWAttributeComponent::IsFullHealth() const
+{
+	return Health == MaxHealth;
+}
+
+float UGWAttributeComponent::GetMaxHealth() const
+{
+	return MaxHealth;
 }

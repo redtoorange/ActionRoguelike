@@ -1,5 +1,6 @@
 ﻿#include "Projectiles/GWBaseProjectile.h"
 
+#include "Components/AudioComponent.h"
 #include "Components/SphereComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
@@ -12,6 +13,7 @@ AGWBaseProjectile::AGWBaseProjectile()
 
 	SphereComponent = CreateDefaultSubobject<USphereComponent>("SphereComp");
 	SphereComponent->SetCollisionProfileName("Projectile");
+	SphereComponent->IgnoreActorWhenMoving(GetInstigator(), true);
 	RootComponent = SphereComponent;
 
 	EffectComponent = CreateDefaultSubobject<UParticleSystemComponent>("EffectComp");
@@ -22,12 +24,14 @@ AGWBaseProjectile::AGWBaseProjectile()
 	MovementComponent->bRotationFollowsVelocity = true;
 	MovementComponent->bInitialVelocityInLocalSpace = true;
 	MovementComponent->ProjectileGravityScale = 0.0f;
+
+	AudioComponent = CreateDefaultSubobject<UAudioComponent>("AudioComp");
+	AudioComponent->SetupAttachment(SphereComponent);
 }
 
 void AGWBaseProjectile::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
-	// SphereComponent->IgnoreActorWhenMoving(GetInstigator(), true);
 	SphereComponent->OnComponentHit.AddDynamic(this, &AGWBaseProjectile::OnActorHit);
 }
 
@@ -52,6 +56,11 @@ void AGWBaseProjectile::Explode_Implementation()
 	if (ensure(!IsPendingKill()))
 	{
 		UGameplayStatics::SpawnEmitterAtLocation(this, ImpactVFX, GetActorLocation(), GetActorRotation());
+		if(ImpactSoundFx)
+		{
+			UGameplayStatics::PlaySoundAtLocation(this, ImpactSoundFx, GetActorLocation());
+			UGameplayStatics::PlayWorldCameraShake(this, CameraShake, GetActorLocation(), 500, 1000);
+		}
 		Destroy();
 	}
 }

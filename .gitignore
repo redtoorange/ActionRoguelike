@@ -212,4 +212,4 @@ $RECYCLE.BIN/
 
 # End of https://www.toptal.com/developers/gitignore/api/windows,rider,unrealengine,c++
 
-Plugins/Developer/RiderLink/*
+Plugins/Developer/RiderLink/Binaries/*
