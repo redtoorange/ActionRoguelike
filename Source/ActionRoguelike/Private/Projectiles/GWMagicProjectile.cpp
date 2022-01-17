@@ -35,7 +35,7 @@ void AGWMagicProjectile::OnActorOverlap(UPrimitiveComponent* PrimitiveComponent,
 		UGWAttributeComponent* AttributeComponent = Actor->FindComponentByClass<UGWAttributeComponent>();
 		if (AttributeComponent)
 		{
-			AttributeComponent->ApplyHealthChange(-20.0f, this);
+			AttributeComponent->ApplyHealthChange(-5.0f, this);
 			Explode();
 		}
 	}

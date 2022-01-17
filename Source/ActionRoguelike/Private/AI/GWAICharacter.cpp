@@ -1,23 +1,26 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "AI/GWAICharacter.h"
 
-// Sets default values
+#include "DrawDebugHelpers.h"
+#include "AI/GWAIController.h"
+#include "BehaviorTree/BlackboardComponent.h"
+
 AGWAICharacter::AGWAICharacter()
 {
-	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	SensingComponent = CreateDefaultSubobject<UPawnSensingComponent>("SensingComp");
 }
 
-// Called when the game starts or when spawned
-void AGWAICharacter::BeginPlay()
+void AGWAICharacter::PostInitializeComponents()
 {
-	Super::BeginPlay();
+	Super::PostInitializeComponents();
+	SensingComponent->OnSeePawn.AddDynamic(this, &AGWAICharacter::HandlePawnSeen);
 }
 
-// Called every frame
-void AGWAICharacter::Tick(float DeltaTime)
+void AGWAICharacter::HandlePawnSeen(APawn* pawn)
 {
-	Super::Tick(DeltaTime);
+	AGWAIController* AIC = Cast<AGWAIController>(GetController());
+	if(AIC)
+	{
+		AIC->GetBlackboardComponent()->SetValueAsObject(targetActorKey, pawn);
+		DrawDebugString(GetWorld(), GetActorLocation(), "Player Spotted", nullptr, FColor::White, 2.0f, true);
+	}
 }
