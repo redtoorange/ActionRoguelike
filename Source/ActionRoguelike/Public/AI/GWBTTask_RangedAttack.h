@@ -17,6 +17,9 @@ class ACTIONROGUELIKE_API UGWBTTask_RangedAttack : public UBTTaskNode
 	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
 
 protected:
+	UPROPERTY(EditAnywhere, Category="VFX")
+	UParticleSystem* MuzzleFlash;
+	
 	UPROPERTY(EditAnywhere, Category="AI")
 	TSubclassOf<AActor> ProjectileClass;
 };

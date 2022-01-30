@@ -17,8 +17,9 @@ bool UGWAttributeComponent::ApplyHealthChange(float delta, AActor* Instigator)
 {
 	bool success = true;
 
+	float oldHealth = Health;
 	Health = FMath::Clamp(Health + delta, 0.0f, MaxHealth);
-	OnHealthChange.Broadcast(Instigator, this, Health, delta);
+	OnHealthChange.Broadcast(Instigator, this, Health, Health - oldHealth);
 
 	return success;
 }

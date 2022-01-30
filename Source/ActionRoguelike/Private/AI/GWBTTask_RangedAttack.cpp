@@ -6,6 +6,7 @@
 #include "AIController.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "GameFramework/Character.h"
+#include "Kismet/GameplayStatics.h"
 
 EBTNodeResult::Type UGWBTTask_RangedAttack::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
@@ -32,6 +33,7 @@ EBTNodeResult::Type UGWBTTask_RangedAttack::ExecuteTask(UBehaviorTreeComponent& 
 		Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
 		AActor* NewProj = GetWorld()->SpawnActor<AActor>(ProjectileClass, MuzzleLocation, MuzzleRotation, Params);
+		UGameplayStatics::SpawnEmitterAttached(MuzzleFlash, MyPawn->GetMesh(), "Muzzle_01");
 
 		return NewProj ? EBTNodeResult::Succeeded : EBTNodeResult::Failed;
 	}

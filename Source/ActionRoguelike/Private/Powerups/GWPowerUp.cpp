@@ -5,13 +5,17 @@
 AGWPowerUp::AGWPowerUp()
 {
 	PrimaryActorTick.bCanEverTick = true;
-	
+
 	HealAmount = 10.0f;
 	CoolDownLength = 10.0f;
 	OnCooldown = false;
 
+	SphereComponent = CreateDefaultSubobject<USphereComponent>("SphereComp");
+	SetRootComponent(SphereComponent);
+	SphereComponent->SetCollisionProfileName("PowerUp");
+
 	StaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>("MeshComponent");
-	SetRootComponent(StaticMeshComponent);
+	StaticMeshComponent->SetupAttachment(SphereComponent);
 }
 
 void AGWPowerUp::BeginPlay()
@@ -32,14 +36,14 @@ void AGWPowerUp::Interact_Implementation(APawn* InstigatorPawn)
 
 void AGWPowerUp::ApplyPower(APawn* InstigatorPawn)
 {
-	if(OnCooldown) return;
-	
+	if (OnCooldown) return;
+
 	UGWAttributeComponent* AttributeComponent = InstigatorPawn->FindComponentByClass<UGWAttributeComponent>();
-	if(AttributeComponent && !AttributeComponent->IsFullHealth())
+	if (AttributeComponent && !AttributeComponent->IsFullHealth())
 	{
 		AttributeComponent->ApplyHealthChange(HealAmount, this);
 		Hide();
-		
+
 		GetWorldTimerManager().SetTimer(CoolDownTimer, this, &AGWPowerUp::Show, CoolDownLength);
 	}
 }
@@ -47,11 +51,13 @@ void AGWPowerUp::ApplyPower(APawn* InstigatorPawn)
 void AGWPowerUp::Show()
 {
 	OnCooldown = false;
-	StaticMeshComponent->SetVisibility(true);
+	RootComponent->SetVisibility(true);
+	SetActorEnableCollision(true);
 }
 
 void AGWPowerUp::Hide()
 {
 	OnCooldown = true;
-	StaticMeshComponent->SetVisibility(false);
+	RootComponent->SetVisibility(false);
+	SetActorEnableCollision(false);
 }

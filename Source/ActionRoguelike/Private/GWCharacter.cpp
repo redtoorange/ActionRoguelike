@@ -27,6 +27,7 @@ AGWCharacter::AGWCharacter()
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 
 	bUseControllerRotationYaw = false;
+	muzzleName = "Muzzle_01";
 }
 
 void AGWCharacter::BeginPlay()
@@ -163,9 +164,9 @@ void AGWCharacter::SpawnAttack(TSubclassOf<AGWBaseProjectile> attack)
 {
 	if (ensureAlways(attack))
 	{
-		UGameplayStatics::SpawnEmitterAttached(CastingVFX, GetMesh(), "Muzzle_01");
+		UGameplayStatics::SpawnEmitterAttached(CastingVFX, GetMesh(), muzzleName);
 
-		FVector HandLocation = GetMesh()->GetSocketLocation("Muzzle_01");
+		FVector HandLocation = GetMesh()->GetSocketLocation(muzzleName);
 		FVector direction = GetTargetEndPoint() - HandLocation;
 		FRotator lookRotation = FRotationMatrix::MakeFromX(direction).Rotator();
 

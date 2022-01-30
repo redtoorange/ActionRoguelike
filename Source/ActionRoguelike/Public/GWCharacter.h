@@ -57,6 +57,10 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category="VFX")
 	UParticleSystem* CastingVFX;
+
+	UPROPERTY(VisibleAnywhere, Category="VFX")
+	FName muzzleName;
+	
 public:	
 	virtual void Tick(float DeltaTime) override;
 

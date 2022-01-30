@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "GWGameplayInterface.h"
+#include "Components/SphereComponent.h"
 #include "GameFramework/Actor.h"
 #include "GWPowerUp.generated.h"
 
@@ -30,6 +31,9 @@ protected:
 
 	UPROPERTY(VisibleAnywhere)
 	UStaticMeshComponent* StaticMeshComponent;
+
+	UPROPERTY(VisibleAnywhere)
+	USphereComponent* SphereComponent;
 
 	FTimerHandle CoolDownTimer;
 
