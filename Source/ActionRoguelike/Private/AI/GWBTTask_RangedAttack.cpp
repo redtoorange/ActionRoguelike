@@ -30,6 +30,7 @@ EBTNodeResult::Type UGWBTTask_RangedAttack::ExecuteTask(UBehaviorTreeComponent& 
 		FRotator MuzzleRotation = Direction.Rotation();
 
 		FActorSpawnParameters Params;
+		Params.Instigator = MyPawn;
 		Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
 		AActor* NewProj = GetWorld()->SpawnActor<AActor>(ProjectileClass, MuzzleLocation, MuzzleRotation, Params);
